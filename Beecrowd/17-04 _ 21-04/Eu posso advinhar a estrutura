@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node
+{
+    int value;
+    struct node *next;
+} Node;
+
+// Função para criar um novo nó
+Node *createNode(int value)
+{
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    newNode->value = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+int main()
+{
+    int n;
+    while (scanf("%d", &n) != EOF)
+    {
+        int isStack = 1, isQueue = 1, isPriorityQueue = 1;
+        int x, prev = -1;
+        Node *stackTop = NULL, *queueFront = NULL, *queueRear = NULL, *priorityQueue = NULL;
+
+        for (int i = 0; i < n; i++)
+        {
+            int op;
+            scanf("%d", &op);
+            if (op == 1)
+            {
+                scanf("%d", &x);
+
+                // Adiciona na pilha
+                Node *newStackNode = createNode(x);
+                newStackNode->next = stackTop;
+                stackTop = newStackNode;
+
+                // Adiciona na fila
+                Node *newQueueNode = createNode(x);
+                if (queueFront == NULL)
+                {
+                    queueFront = newQueueNode;
+                }
+                else
+                {
+                    queueRear->next = newQueueNode;
+                }
+                queueRear = newQueueNode;
+
+                // Adiciona na fila de prioridade
+                Node *newPriorityQueueNode = createNode(x);
+                if (priorityQueue == NULL || x >= priorityQueue->value)
+                {
+                    newPriorityQueueNode->next = priorityQueue;
+                    priorityQueue = newPriorityQueueNode;
+                }
+                else
+                {
+                    Node *current = priorityQueue;
+                    while (current->next != NULL && x < current->next->value)
+                    {
+                        current = current->next;
+                    }
+                    newPriorityQueueNode->next = current->next;
+                    current->next = newPriorityQueueNode;
+                }
+            }
+            else if (op == 2)
+            {
+                scanf("%d", &x);
+
+                // Verifica se é uma pilha
+                if (stackTop != NULL && x == stackTop->value)
+                {
+                    stackTop = stackTop->next;
+                }
+                else
+                {
+                    isStack = 0;
+                }
+
+                // Verifica se é uma fila
+                if (queueFront != NULL && x == queueFront->value)
+                {
+                    queueFront = queueFront->next;
+                }
+                else
+                {
+                    isQueue = 0;
+                }
+
+                // Verifica se é uma fila de prioridade
+                if (priorityQueue != NULL && x == priorityQueue->value)
+                {
+                    priorityQueue = priorityQueue->next;
+                }
+                else
+                {
+                    isPriorityQueue = 0;
+                }
+            }
+        }
+
+        if (isStack && !isQueue && !isPriorityQueue)
+        {
+            printf("stack\n");
+        }
+        else if (!isStack && isQueue && !isPriorityQueue)
+        {
+            printf("queue\n");
+        }
+        else if (!isStack && !isQueue && isPriorityQueue)
+        {
+            printf("priority queue\n");
+        }
+        else if (!isStack && !isQueue && !isPriorityQueue)
+        {
+            printf("impossible\n");
+        }
+        else
+        {
+            printf("not sure\n");
+        }
+    }
+
+    return 0;
+}
