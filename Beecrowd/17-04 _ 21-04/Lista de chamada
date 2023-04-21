@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Aluno
+{
+    char nome[21];
+    int posicao;
+};
+
+int compararAlunos(const void *a, const void *b)
+{
+    struct Aluno *alunoA = (struct Aluno *)a;
+    struct Aluno *alunoB = (struct Aluno *)b;
+    return strcmp(alunoA->nome, alunoB->nome);
+}
+
+int main()
+{
+    int n, k;
+    scanf("%d %d", &n, &k);
+
+    // Lendo os nomes dos alunos e armazenando em um array de structs
+    struct Aluno alunos[n];
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%s", alunos[i].nome);
+        alunos[i].posicao = i + 1;
+    }
+
+    // Ordenando o array de alunos em ordem alfabética
+    qsort(alunos, n, sizeof(struct Aluno), compararAlunos);
+
+    // Imprimindo o nome do aluno sorteado
+    printf("%s\n", alunos[k - 1].nome);
+
+    return 0;
+}
